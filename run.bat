@@ -14,9 +14,19 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Install packages if needed
+REM Check if packages are installed
 echo Checking packages...
-pip install -r requirements.txt --quiet
+python -c "import fastapi, uvicorn, whisper, pydub, google.generativeai" >nul 2>&1
+if errorlevel 1 (
+    echo Installing required packages...
+    echo This may take a few minutes on first run...
+    echo.
+    pip install -r requirements.txt
+    echo.
+    echo Installation complete!
+) else (
+    echo All packages are already installed.
+)
 
 REM Start server
 echo.

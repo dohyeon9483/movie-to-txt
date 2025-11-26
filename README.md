@@ -178,20 +178,20 @@ python main.py
 ## 프로젝트 구조
 
 ```
-영상 음성 변환기/
-├── 영상_음성_변환기_실행.bat  # Windows 배치 파일 (더블클릭 실행)
-├── start_server.py          # Python 실행 스크립트
-├── 바로_실행.vbs            # VBS 실행 파일
+movie-to-txt/
+├── run.bat                  # Windows 간편 실행 파일
+├── start_server.py          # 크로스 플랫폼 실행 스크립트 (권장)
 ├── main.py                  # FastAPI 서버 (SSE 지원, API 엔드포인트)
 ├── database.py              # JSON 기반 파일 메타데이터 저장소
-├── database.json            # 파일 메타데이터 DB (자동 생성)
 ├── requirements.txt         # Python 의존성
-├── README.md               # 프로젝트 설명
-├── uploads/                # 임시 업로드 폴더 (자동 생성)
-└── static/                 # 프론트엔드 파일
-    ├── index.html          # 메인 UI (홈/대시보드/설정)
-    ├── style.css           # 모던한 디자인 스타일
-    └── script.js           # 전체 프론트엔드 로직
+├── README.md                # 프로젝트 설명
+├── .gitignore               # Git 제외 파일 목록
+├── database.json            # 파일 메타데이터 DB (자동 생성)
+├── uploads/                 # 임시 업로드 폴더 (자동 생성)
+└── static/                  # 프론트엔드 파일
+    ├── index.html           # 메인 UI (홈/대시보드/설정)
+    ├── style.css            # 모던한 디자인 스타일
+    └── script.js            # 전체 프론트엔드 로직
 ```
 
 ## 주의사항
