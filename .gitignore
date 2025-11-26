@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# API Keys & Environment
+.env
+*.env
+
+# Database & User Data
+database.json
+files_db.json
+
+# Uploads & Temporary Files
+uploads/
+*.mp4
+*.mp3
+*.wav
+*.webm
+*.m4a
+*.flac
+*.avi
+*.mov
+*.mkv
+test_text.txt
+test*.mp4
+test*.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+

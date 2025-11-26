@@ -1,0 +1,1084 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* 네비게이션 */
+.main-nav {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1.05em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.nav-btn.active {
+    background: white;
+    color: #667eea;
+    border-color: white;
+}
+
+/* 모드 선택 화면 */
+.mode-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.mode-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.mode-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+.mode-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.mode-card h2 {
+    font-size: 1.6em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.mode-card p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.mode-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+/* 섹션 공통 */
+.section {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.back-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #e0e0e0;
+    transform: translateX(-5px);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 녹음 화면 */
+.record-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.record-status {
+    margin: 40px 0;
+}
+
+.record-visualizer {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.record-icon {
+    font-size: 5em;
+    z-index: 2;
+    position: relative;
+}
+
+.record-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    border: 4px solid #667eea;
+    opacity: 0;
+}
+
+.record-pulse.recording {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+}
+
+#recordStatusText {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.record-time {
+    font-size: 2em;
+    font-weight: 600;
+    color: #667eea;
+    font-family: 'Courier New', monospace;
+}
+
+.record-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.btn-record, .btn-stop, .btn-process {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-record {
+    background: #667eea;
+    color: white;
+}
+
+.btn-record:hover {
+    background: #5568d3;
+    transform: scale(1.05);
+}
+
+.btn-stop {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-stop:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+.btn-process {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-process:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.3em;
+}
+
+.record-info {
+    background: #f8f9ff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.record-info p {
+    color: #666;
+    line-height: 1.8;
+    margin: 5px 0;
+}
+
+/* 파일 업로드 화면 */
+.upload-area {
+    /* 기존 스타일 유지 */
+}
+
+.drop-zone {
+    border: 3px dashed #667eea;
+    border-radius: 15px;
+    padding: 60px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9ff;
+}
+
+.drop-zone:hover {
+    border-color: #764ba2;
+    background: #f0f2ff;
+    transform: translateY(-5px);
+}
+
+.drop-zone.drag-over {
+    border-color: #764ba2;
+    background: #e8ebff;
+    transform: scale(1.02);
+}
+
+.drop-zone-content {
+    pointer-events: none;
+}
+
+.upload-icon {
+    width: 80px;
+    height: 80px;
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.drop-zone h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.file-types {
+    color: #666;
+    font-size: 0.95em;
+    line-height: 1.8;
+    margin: 15px 0;
+}
+
+.file-types strong {
+    color: #667eea;
+}
+
+.multiple-info {
+    color: #667eea;
+    font-size: 0.9em;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+/* 진행 상황 */
+.progress-section {
+    margin-top: 30px;
+}
+
+#filesProgress {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.file-progress-item {
+    background: #f8f9ff;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.file-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.file-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 1em;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+.file-status {
+    font-size: 0.85em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.file-status.processing {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.file-status.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.file-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    background: #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    width: 0%;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-weight: 600;
+    font-size: 0.85em;
+    z-index: 1;
+}
+
+.status-text {
+    color: #667eea;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* 결과 화면 */
+.result-section {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.result-header h2 {
+    color: #333;
+    font-size: 1.8em;
+}
+
+.btn-download {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-download svg {
+    width: 20px;
+    height: 20px;
+}
+
+#resultsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.result-item {
+    background: #f8f9ff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.result-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.result-filename {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.btn-download-single {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-download-single:hover {
+    background: #764ba2;
+    transform: translateY(-1px);
+}
+
+.btn-download-single svg {
+    width: 16px;
+    height: 16px;
+}
+
+.result-text {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    line-height: 1.8;
+    color: #333;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1em;
+}
+
+/* 스크롤바 스타일링 */
+.result-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.result-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.result-text::-webkit-scrollbar-thumb {
+    background: #667eea;
+    border-radius: 10px;
+}
+
+.result-text::-webkit-scrollbar-thumb:hover {
+    background: #764ba2;
+}
+
+/* 대시보드 */
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h2 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-new-file {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-new-file:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.files-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.loading {
+    padding: 40px;
+    text-align: center;
+    color: #666;
+    font-size: 1.1em;
+}
+
+.file-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.5fr auto;
+    gap: 15px;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.file-row:hover {
+    background: #f8f9ff;
+}
+
+.file-row.header {
+    background: #667eea;
+    color: white;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+.file-row.header:hover {
+    background: #667eea;
+}
+
+.file-info-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.file-info-type {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.file-info-type.recording {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.file-info-type.video {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.file-info-type.audio {
+    background: #d4edda;
+    color: #155724;
+}
+
+.file-info-type.text {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.file-info-date {
+    color: #666;
+    font-size: 0.95em;
+}
+
+.file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-file-action {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-file-action.view {
+    background: #667eea;
+    color: white;
+}
+
+.btn-file-action.delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-file-action:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* 설정 화면 */
+#settingsSection h2 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.settings-card {
+    background: #f8f9ff;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.settings-card h3 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.settings-desc {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.api-key-status {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: white;
+    font-weight: 600;
+}
+
+.api-key-status.connected {
+    color: #155724;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.api-key-status.disconnected {
+    color: #721c24;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.api-key-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.api-key-input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1em;
+    font-family: monospace;
+}
+
+.api-key-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn-save-key {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save-key:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+.settings-info {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+}
+
+.settings-info p {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.settings-info ol {
+    margin: 10px 0 15px 20px;
+    color: #666;
+}
+
+.settings-info li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.settings-info a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.settings-info a:hover {
+    text-decoration: underline;
+}
+
+.settings-info .note {
+    margin-top: 15px;
+    padding: 10px;
+    background: #fff3cd;
+    border-radius: 6px;
+    color: #856404;
+    font-size: 0.95em;
+}
+
+/* 모달 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h3 {
+    color: #333;
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #333;
+    transform: rotate(90deg);
+}
+
+.modal-tabs {
+    display: flex;
+    gap: 5px;
+    padding: 20px 30px 0;
+    border-bottom: 2px solid #f0f0f0;
+    overflow-x: auto;
+}
+
+.modal-tabs .tab-btn {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    font-size: 0.95em;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.modal-tabs .tab-btn:hover {
+    color: #667eea;
+}
+
+.modal-tabs .tab-btn.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    line-height: 1.8;
+    color: #333;
+    font-family: inherit;
+}
+
+.summary-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 1.1em;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    padding: 20px 30px;
+    border-top: 2px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.btn-action {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-action.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-action.danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .main-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .nav-btn {
+        width: 100%;
+    }
+    
+    .mode-selection {
+        grid-template-columns: 1fr;
+    }
+    
+    .section {
+        padding: 25px;
+    }
+    
+    .drop-zone {
+        padding: 40px 15px;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-download {
+        justify-content: center;
+    }
+
+    .record-controls {
+        flex-direction: column;
+    }
+    
+    .file-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .file-row .file-actions {
+        justify-content: stretch;
+    }
+    
+    .btn-file-action {
+        flex: 1;
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .modal-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .btn-action {
+        width: 100%;
+    }
+}
