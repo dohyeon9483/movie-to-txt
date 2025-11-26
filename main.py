@@ -36,7 +36,13 @@ def set_gemini_api_key(api_key: str) -> bool:
     try:
         genai.configure(api_key=api_key)
         # gemini-2.0-flash: 최신 모델, 저렴하고 빠름 (무료 티어 10 RPM, 100만 토큰/분)
-        gemini_model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        
+        # 간단한 테스트로 API 키 검증
+        test_response = model.generate_content("Hi")
+        
+        # 테스트 성공하면 전역 변수에 저장
+        gemini_model = model
         gemini_api_key = api_key
         print("✓ Gemini API 연결 완료! (모델: gemini-2.0-flash-exp)")
         return True
@@ -433,6 +439,21 @@ async def get_file_detail(file_id: str):
         raise
     except Exception as e:
         print(f"파일 조회 오류: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/api/files/{file_id}/summary/{summary_type}")
+async def delete_summary_api(file_id: str, summary_type: str):
+    """요약 삭제"""
+    try:
+        success = db.delete_summary(file_id, summary_type)
+        if not success:
+            raise HTTPException(status_code=404, detail="요약을 찾을 수 없습니다.")
+        return {"success": True, "message": "요약이 삭제되었습니다."}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"요약 삭제 오류: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

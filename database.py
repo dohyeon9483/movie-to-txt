@@ -75,6 +75,20 @@ def update_summary(file_id: str, summary_type: str, summary_text: str) -> bool:
             return True
     return False
 
+def delete_summary(file_id: str, summary_type: str) -> bool:
+    """파일의 특정 요약 삭제"""
+    db = load_db()
+    for file in db["files"]:
+        if file["id"] == file_id:
+            if "summaries" not in file:
+                file["summaries"] = {}
+            if summary_type in file["summaries"]:
+                del file["summaries"][summary_type]
+                file["last_updated"] = datetime.now().isoformat()
+                save_db(db)
+            return True  # 파일이 존재하면 요약이 없어도 성공으로 처리
+    return False
+
 def delete_file(file_id: str) -> bool:
     """파일 삭제"""
     db = load_db()

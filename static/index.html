@@ -126,6 +126,17 @@
                 </div>
             </div>
 
+            <div class="dashboard-toolbar">
+                <div class="checkbox-actions">
+                    <button id="selectAllBtn" class="btn-toolbar">전체 선택</button>
+                    <button id="deselectAllBtn" class="btn-toolbar">전체 해제</button>
+                </div>
+                <div class="bulk-actions">
+                    <button id="downloadSelectedBtn" class="btn-toolbar primary">📥 선택 다운로드</button>
+                    <button id="deleteSelectedBtn" class="btn-toolbar danger">🗑️ 선택 삭제</button>
+                </div>
+            </div>
+
             <div id="filesTable" class="files-table">
                 <div class="loading">파일 목록을 불러오는 중...</div>
             </div>
@@ -200,9 +211,9 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button id="modalDownloadBtn" class="btn-action">📥 현재 탭 다운로드</button>
+                    <button id="modalDownloadBtn" class="btn-action">📥 txt 파일 다운로드</button>
                     <button id="modalSummarizeBtn" class="btn-action primary">✨ 요약 생성</button>
-                    <button id="modalDeleteBtn" class="btn-action danger">🗑️ 삭제</button>
+                    <button id="modalDeleteSummaryBtn" class="btn-action warning">🗑️ 요약 삭제</button>
                 </div>
             </div>
         </div>

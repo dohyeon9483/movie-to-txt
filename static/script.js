@@ -24,6 +24,10 @@ const backToModeFromResult = document.getElementById('backToModeFromResult');
 const filesTable = document.getElementById('filesTable');
 const searchInput = document.getElementById('searchInput');
 const newFileBtn = document.getElementById('newFileBtn');
+const selectAllBtn = document.getElementById('selectAllBtn');
+const deselectAllBtn = document.getElementById('deselectAllBtn');
+const downloadSelectedBtn = document.getElementById('downloadSelectedBtn');
+const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
 
 // 설정
 const apiKeyInput = document.getElementById('apiKeyInput');
@@ -36,7 +40,7 @@ const modalFilename = document.getElementById('modalFilename');
 const modalBody = document.getElementById('modalBody');
 const modalDownloadBtn = document.getElementById('modalDownloadBtn');
 const modalSummarizeBtn = document.getElementById('modalSummarizeBtn');
-const modalDeleteBtn = document.getElementById('modalDeleteBtn');
+const modalDeleteSummaryBtn = document.getElementById('modalDeleteSummaryBtn');
 const modalClose = document.querySelector('.modal-close');
 
 // 녹음 관련
@@ -376,7 +380,6 @@ function createFileProgressTracker(filename, trackerId) {
             <div class="progress-fill" style="width: 0%"></div>
             <div class="progress-text">0%</div>
         </div>
-        <div class="status-text">처리 대기 중...</div>
     `;
     
     return {
@@ -384,12 +387,10 @@ function createFileProgressTracker(filename, trackerId) {
         updateProgress: (progress, message, status) => {
             const progressFill = element.querySelector('.progress-fill');
             const progressText = element.querySelector('.progress-text');
-            const statusText = element.querySelector('.status-text');
             const statusBadge = element.querySelector('.file-status');
             
             progressFill.style.width = `${progress}%`;
             progressText.textContent = `${progress}%`;
-            statusText.textContent = message;
             
             statusBadge.className = `file-status ${status}`;
             if (status === 'completed') {
@@ -530,18 +531,14 @@ function renderFilesTable(files) {
         return;
     }
     
-    let html = '<div class="file-row header">';
-    html += '<div>파일명</div>';
-    html += '<div>타입</div>';
-    html += '<div>업로드 시간</div>';
-    html += '<div>액션</div>';
-    html += '</div>';
+    let html = '';
     
     files.forEach(file => {
         const date = new Date(file.uploaded_at);
         const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:${String(date.getMinutes()).padStart(2,'0')}`;
         
         html += '<div class="file-row">';
+        html += `<div><input type="checkbox" class="file-checkbox" data-file-id="${file.id}" data-filename="${file.filename}"></div>`;
         html += `<div class="file-info-name">${file.filename}</div>`;
         html += `<div><span class="file-info-type ${file.type}">${getTypeLabel(file.type)}</span></div>`;
         html += `<div class="file-info-date">${dateStr}</div>`;
@@ -593,6 +590,99 @@ newFileBtn.addEventListener('click', () => {
     navHome.classList.add('active');
     navDashboard.classList.remove('active');
     showSection('mode');
+});
+
+// ============ 체크박스 기능 ============
+
+// 전체 선택
+selectAllBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('.file-checkbox');
+    checkboxes.forEach(cb => cb.checked = true);
+});
+
+// 전체 해제
+deselectAllBtn.addEventListener('click', () => {
+    const checkboxes = document.querySelectorAll('.file-checkbox');
+    checkboxes.forEach(cb => cb.checked = false);
+});
+
+// 선택된 파일 다운로드
+downloadSelectedBtn.addEventListener('click', async () => {
+    const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+    
+    if (checkboxes.length === 0) {
+        alert('다운로드할 파일을 선택해주세요.');
+        return;
+    }
+    
+    if (!confirm(`선택한 ${checkboxes.length}개 파일의 원본 텍스트를 다운로드하시겠습니까?`)) {
+        return;
+    }
+    
+    for (const checkbox of checkboxes) {
+        const fileId = checkbox.dataset.fileId;
+        const filename = checkbox.dataset.filename;
+        
+        try {
+            const response = await fetch(`/api/files/${fileId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                const text = data.file.original_text;
+                const txtFilename = filename.replace(/\.[^/.]+$/, '') + '.txt';
+                downloadText(text, txtFilename);
+                
+                // 다운로드 간격 (브라우저 제한 방지)
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+        } catch (error) {
+            console.error(`파일 다운로드 오류 (${filename}):`, error);
+        }
+    }
+    
+    alert(`${checkboxes.length}개 파일 다운로드가 완료되었습니다!`);
+});
+
+// 선택된 파일 삭제
+deleteSelectedBtn.addEventListener('click', async () => {
+    const checkboxes = document.querySelectorAll('.file-checkbox:checked');
+    
+    if (checkboxes.length === 0) {
+        alert('삭제할 파일을 선택해주세요.');
+        return;
+    }
+    
+    if (!confirm(`선택한 ${checkboxes.length}개 파일을 정말 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`)) {
+        return;
+    }
+    
+    let successCount = 0;
+    let failCount = 0;
+    
+    for (const checkbox of checkboxes) {
+        const fileId = checkbox.dataset.fileId;
+        
+        try {
+            const response = await fetch(`/api/files/${fileId}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            
+            if (data.success) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        } catch (error) {
+            console.error('파일 삭제 오류:', error);
+            failCount++;
+        }
+    }
+    
+    alert(`삭제 완료: ${successCount}개 성공, ${failCount}개 실패`);
+    
+    // 대시보드 새로고침
+    loadDashboard();
 });
 
 // ============ 모달 기능 ============
@@ -793,12 +883,39 @@ async function deleteFile(fileId) {
     }
 }
 
-// 모달에서 삭제
-modalDeleteBtn.addEventListener('click', () => {
-    if (currentFileId) {
-        deleteFile(currentFileId);
+// 요약 삭제
+modalDeleteSummaryBtn.addEventListener('click', async () => {
+    if (!currentFileId || currentTab === 'original') {
+        alert('요약을 선택해주세요.');
+        return;
+    }
+    
+    if (!confirm('현재 탭의 요약을 삭제하시겠습니까?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/files/${currentFileId}/summary/${currentTab}`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            // 요약 내용 초기화
+            const content = document.querySelector(`.modal-body [data-content="${currentTab}"]`);
+            if (content) {
+                content.innerHTML = '<div class="summary-placeholder">요약 생성 버튼을 클릭하세요</div>';
+            }
+            alert('요약이 삭제되었습니다.');
+        } else {
+            alert('요약 삭제 중 오류가 발생했습니다.');
+        }
+    } catch (error) {
+        console.error('요약 삭제 오류:', error);
+        alert('요약 삭제 중 오류가 발생했습니다.');
     }
 });
+
 
 // ============ 설정 기능 ============
 

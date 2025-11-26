@@ -577,7 +577,7 @@ header p {
 
 /* 대시보드 */
 .dashboard-header {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .dashboard-header h2 {
@@ -590,6 +590,54 @@ header p {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+}
+
+.dashboard-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.checkbox-actions,
+.bulk-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-toolbar {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+    color: #333;
+    border: 2px solid #e0e0e0;
+}
+
+.btn-toolbar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-toolbar.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+}
+
+.btn-toolbar.danger {
+    background: #dc3545;
+    color: white;
+    border: none;
 }
 
 .search-input {
@@ -639,12 +687,18 @@ header p {
 
 .file-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.5fr auto;
+    grid-template-columns: auto 2fr 1fr 1.5fr auto;
     gap: 15px;
     padding: 20px;
     border-bottom: 1px solid #f0f0f0;
     align-items: center;
     transition: all 0.3s ease;
+}
+
+.file-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
 }
 
 .file-row:hover {
@@ -920,6 +974,11 @@ header p {
     padding: 20px 30px 0;
     border-bottom: 2px solid #f0f0f0;
     overflow-x: auto;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
 .modal-tabs .tab-btn {
@@ -1005,6 +1064,11 @@ header p {
 
 .btn-action.danger {
     background: #dc3545;
+    color: white;
+}
+
+.btn-action.warning {
+    background: #ff9800;
     color: white;
 }
 
