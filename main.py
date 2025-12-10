@@ -294,8 +294,14 @@ async def process_single_file(file: UploadFile, file_index: int, total_files: in
             # 5. 오디오 추출 중
             yield await send_progress(f"{file_prefix}: 오디오 추출 중...", 35, "processing")
             print("오디오 추출 중...")
-            if not extract_audio_from_video(str(video_path), str(audio_path)):
-                yield await send_progress(f"{file_prefix}: 오디오 추출 실패", 0, "error")
+            try:
+                success = await asyncio.to_thread(extract_audio_from_video, str(video_path), str(audio_path))
+                if not success:
+                    yield await send_progress(f"{file_prefix}: 오디오 추출 실패", 0, "error")
+                    return
+            except Exception as e:
+                print(f"오디오 추출 오류: {e}")
+                yield await send_progress(f"{file_prefix}: 오디오 추출 실패 - {str(e)}", 0, "error")
                 return
             
             # 6. 오디오 추출 완료
@@ -309,9 +315,17 @@ async def process_single_file(file: UploadFile, file_index: int, total_files: in
             await asyncio.sleep(0.2)
             
             # 8. 음성 인식 중 (가장 시간이 오래 걸림)
+            # 별도 스레드에서 실행하여 이벤트 루프 블로킹 방지
             yield await send_progress(f"{file_prefix}: 음성 인식 중... (시간이 다소 걸릴 수 있습니다)", 65, "processing")
             print("음성 인식 중...")
-            text = transcribe_audio(str(audio_path), language="ko")
+            
+            # 비동기로 실행하여 타임아웃 방지
+            try:
+                text = await asyncio.to_thread(transcribe_audio, str(audio_path), "ko")
+            except Exception as e:
+                print(f"음성 인식 오류: {e}")
+                yield await send_progress(f"{file_prefix}: 음성 인식 실패 - {str(e)}", 0, "error")
+                return
             
             if text is None:
                 yield await send_progress(f"{file_prefix}: 음성 인식 실패", 0, "error")
