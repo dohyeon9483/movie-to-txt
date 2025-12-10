@@ -49,25 +49,31 @@ def start_server():
     import uvicorn
     import threading
     
-    # 3초 후 브라우저 열기
-    def open_browser():
-        time.sleep(3)
-        print("\n브라우저를 엽니다...")
-        webbrowser.open("http://localhost:8000")
+    # Railway나 다른 클라우드 환경에서는 PORT 환경 변수 사용
+    port = int(os.environ.get("PORT", 8000))
+    is_railway = os.environ.get("RAILWAY_ENVIRONMENT") is not None
     
-    browser_thread = threading.Thread(target=open_browser, daemon=True)
-    browser_thread.start()
+    # 로컬 환경에서만 브라우저 열기
+    if not is_railway:
+        def open_browser():
+            time.sleep(3)
+            print("\n브라우저를 엽니다...")
+            webbrowser.open(f"http://localhost:{port}")
+        
+        browser_thread = threading.Thread(target=open_browser, daemon=True)
+        browser_thread.start()
     
     # 서버 시작
     print("\n" + "="*50)
     print("  영상 음성 변환기 서버 시작")
-    print("  URL: http://localhost:8000")
-    print("  종료하려면 Ctrl+C를 누르세요")
+    print(f"  URL: http://0.0.0.0:{port}")
+    if not is_railway:
+        print("  종료하려면 Ctrl+C를 누르세요")
     print("="*50 + "\n")
     
     # main.py의 app을 import해서 실행
     from main import app
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
 
 def main():
     """메인 실행 함수"""

@@ -564,5 +564,7 @@ async def check_api_key():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Railway나 다른 클라우드 환경에서는 PORT 환경 변수 사용
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
