@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Database & User Data
+database.json
+files_db.json
+
+# Uploads & Temporary Files
+uploads/
+*.mp4
+*.mp3
+*.wav
+*.webm
+*.m4a
+*.flac
+*.avi
+*.mov
+*.mkv
+test_text.txt
+test*.mp4
+test*.txt
+
+# Git
+.git/
+.gitignore
+
+# Node modules (불필요)
+node_modules/
+package-lock.json
+
+# Android (불필요)
+android/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Whisper 모델 캐시 (런타임에 다운로드)
+~/.cache/whisper/
+
