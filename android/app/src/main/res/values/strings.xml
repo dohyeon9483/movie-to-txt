@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">영상 음성 변환기</string>
+    <string name="title_activity_main">영상 음성 변환기</string>
+    <string name="package_name">com.movietotxt.app</string>
+    <string name="custom_url_scheme">com.movietotxt.app</string>
+</resources>
