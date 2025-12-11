@@ -32,6 +32,7 @@ const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
 // 설정
 const apiKeyInput = document.getElementById('apiKeyInput');
 const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+const deleteApiKeyBtn = document.getElementById('deleteApiKeyBtn');
 const apiKeyStatus = document.getElementById('apiKeyStatus');
 
 // 모달
@@ -927,9 +928,14 @@ async function checkApiKeyStatus() {
         if (data.has_key) {
             apiKeyStatus.textContent = `✅ API 키 설정됨 (${data.key_preview})`;
             apiKeyStatus.className = 'api-key-status connected';
+            // 현재 저장된 키를 마스킹하여 표시 (수정 가능하도록)
+            apiKeyInput.placeholder = '저장된 API 키가 있습니다. 수정하려면 새 키를 입력하세요.';
+            apiKeyInput.value = ''; // 보안을 위해 실제 키는 표시하지 않음
         } else {
             apiKeyStatus.textContent = '❌ API 키가 설정되지 않음';
             apiKeyStatus.className = 'api-key-status disconnected';
+            apiKeyInput.placeholder = 'Gemini API 키를 입력하세요';
+            apiKeyInput.value = '';
         }
     } catch (error) {
         console.error('API 키 상태 확인 오류:', error);
@@ -939,8 +945,11 @@ async function checkApiKeyStatus() {
 saveApiKeyBtn.addEventListener('click', async () => {
     const apiKey = apiKeyInput.value.trim();
     
+    // 빈 값인 경우 삭제로 처리
     if (!apiKey) {
-        alert('API 키를 입력해주세요.');
+        if (confirm('API 키를 삭제하시겠습니까?')) {
+            await deleteApiKey();
+        }
         return;
     }
     
@@ -948,9 +957,6 @@ saveApiKeyBtn.addEventListener('click', async () => {
     saveApiKeyBtn.disabled = true;
     
     try {
-        const formData = new FormData();
-        formData.append('api_key', apiKey);
-        
         const response = await fetch('/api/set-api-key', {
             method: 'POST',
             headers: {
@@ -958,6 +964,10 @@ saveApiKeyBtn.addEventListener('click', async () => {
             },
             body: JSON.stringify({ api_key: apiKey })
         });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP 오류: ${response.status} ${response.statusText}`);
+        }
         
         const data = await response.json();
         
@@ -974,10 +984,57 @@ saveApiKeyBtn.addEventListener('click', async () => {
         }
     } catch (error) {
         console.error('API 키 저장 오류:', error);
-        alert('API 키 저장 중 오류가 발생했습니다.');
+        alert('API 키 저장 중 오류가 발생했습니다: ' + error.message);
     } finally {
         saveApiKeyBtn.textContent = '저장';
         saveApiKeyBtn.disabled = false;
+    }
+});
+
+// API 키 삭제 함수
+async function deleteApiKey() {
+    deleteApiKeyBtn.textContent = '삭제 중...';
+    deleteApiKeyBtn.disabled = true;
+    
+    try {
+        const response = await fetch('/api/set-api-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ api_key: '' })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP 오류: ${response.status} ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('✅ ' + data.message);
+            apiKeyInput.value = '';
+            
+            // 로컬 스토리지에서도 삭제
+            localStorage.removeItem('gemini_api_key');
+            
+            checkApiKeyStatus();
+        } else {
+            alert('❌ ' + data.message);
+        }
+    } catch (error) {
+        console.error('API 키 삭제 오류:', error);
+        alert('API 키 삭제 중 오류가 발생했습니다: ' + error.message);
+    } finally {
+        deleteApiKeyBtn.textContent = '삭제';
+        deleteApiKeyBtn.disabled = false;
+    }
+}
+
+// 삭제 버튼 이벤트 리스너
+deleteApiKeyBtn.addEventListener('click', async () => {
+    if (confirm('저장된 API 키를 삭제하시겠습니까?')) {
+        await deleteApiKey();
     }
 });
 

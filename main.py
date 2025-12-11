@@ -19,7 +19,7 @@ import database as db
 
 # Pydantic 모델
 class ApiKeyRequest(BaseModel):
-    api_key: str
+    api_key: Optional[str] = ""
 
 # 환경 변수 로드
 load_dotenv()
@@ -548,22 +548,40 @@ async def search_files_api(q: str):
 
 @app.post("/api/set-api-key")
 async def set_api_key(request: ApiKeyRequest):
-    """Gemini API 키 설정 및 검증"""
+    """Gemini API 키 설정 및 검증 (빈 문자열로 삭제 가능)"""
     try:
-        api_key = request.api_key
+        print(f"[DEBUG] API 키 설정 요청 수신: request={request}")
+        print(f"[DEBUG] request.api_key 값: {request.api_key}")
         
-        if not api_key or len(api_key) < 10:
-            return {"success": False, "message": "유효하지 않은 API 키입니다."}
+        # request.api_key가 None이거나 없을 수 있으므로 안전하게 처리
+        api_key = (request.api_key or "").strip()
+        print(f"[DEBUG] 처리된 api_key: '{api_key}' (길이: {len(api_key)})")
+        
+        # 빈 문자열인 경우 API 키 삭제
+        if not api_key:
+            global gemini_api_key, gemini_model
+            gemini_api_key = None
+            gemini_model = None
+            return JSONResponse({"success": True, "message": "API 키가 삭제되었습니다."})
+        
+        # 유효성 검사
+        if len(api_key) < 10:
+            return JSONResponse({"success": False, "message": "유효하지 않은 API 키입니다."})
         
         success = set_gemini_api_key(api_key)
         
         if success:
-            return {"success": True, "message": "API 키가 성공적으로 설정되었습니다!"}
+            return JSONResponse({"success": True, "message": "API 키가 성공적으로 설정되었습니다!"})
         else:
-            return {"success": False, "message": "API 키 검증에 실패했습니다. 올바른 키인지 확인해주세요."}
+            return JSONResponse({"success": False, "message": "API 키 검증에 실패했습니다. 올바른 키인지 확인해주세요."})
+    except AttributeError as e:
+        print(f"API 키 요청 파싱 오류: {e}")
+        return JSONResponse({"success": False, "message": f"요청 형식 오류: {str(e)}"}, status_code=400)
     except Exception as e:
         print(f"API 키 설정 오류: {e}")
-        return {"success": False, "message": f"오류가 발생했습니다: {str(e)}"}
+        import traceback
+        traceback.print_exc()
+        return JSONResponse({"success": False, "message": f"오류가 발생했습니다: {str(e)}"}, status_code=500)
 
 
 @app.get("/api/check-api-key")

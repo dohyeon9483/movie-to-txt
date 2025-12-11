@@ -526,10 +526,6 @@ header p {
 /* ============================================
    파일 업로드 화면
    ============================================ */
-.upload-area {
-    /* 컨테이너 스타일 */
-}
-
 .drop-zone {
     border: 3px dashed var(--primary-500);
     border-radius: var(--radius-xl);
@@ -1243,6 +1239,55 @@ header p {
     background: var(--primary-gradient-hover);
 }
 
+.api-key-input-group .btn-delete-key,
+#deleteApiKeyBtn.btn-delete-key,
+button.btn-delete-key {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    background-color: transparent !important;
+    color: white !important;
+    border: none !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    border-color: transparent !important;
+    padding: var(--spacing-3) var(--spacing-8) !important;
+    padding-block: var(--spacing-3) !important;
+    padding-inline: var(--spacing-8) !important;
+    margin: 0 !important;
+    border-radius: var(--radius-lg) !important;
+    font-size: var(--font-size-base) !important;
+    font-weight: var(--font-weight-semibold) !important;
+    font-family: var(--font-family-base) !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    text-align: center !important;
+    transition: all var(--transition-base) !important;
+    box-shadow: var(--shadow-md) !important;
+    white-space: nowrap !important;
+    line-height: normal !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
+.api-key-input-group .btn-delete-key:hover,
+#deleteApiKeyBtn.btn-delete-key:hover,
+button.btn-delete-key:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+}
+
+.api-key-input-group .btn-delete-key:disabled,
+#deleteApiKeyBtn.btn-delete-key:disabled,
+button.btn-delete-key:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .settings-info {
     background: white;
     border-radius: var(--radius-lg);
@@ -1641,7 +1686,8 @@ header p {
         flex-direction: column;
     }
     
-    .btn-save-key {
+    .btn-save-key,
+    .btn-delete-key {
         width: 100%;
     }
 }
